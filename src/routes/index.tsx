@@ -55,9 +55,7 @@ type Verbosity = "low" | "medium" | "high";
 type Effort = "low" | "medium" | "high" | "xhigh";
 
 function Index() {
-  const [prompt, setPrompt] = useState(
-    "Write a LinkedIn post about the latest course I'm taking on RAG by Diogo Resende…",
-  );
+  const [prompt, setPrompt] = useState("Write a LinkedIn post about …");
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
   const [systemMessageEnabled, setSystemMessageEnabled] = useState(false);
