@@ -59,6 +59,14 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-soft: var(--brand-soft);
+  --color-generate: var(--generate);
+  --color-generate-foreground: var(--generate-foreground);
+  --color-page: var(--page);
+  --color-link: var(--link);
+  --shadow-card: 0 1px 2px 0 oklch(0 0 0 / 0.04), 0 8px 24px -12px oklch(0 0 0 / 0.08);
 }
 
 :root {
@@ -95,6 +103,13 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+  --brand: oklch(0.65 0.24 350);
+  --brand-foreground: oklch(1 0 0);
+  --brand-soft: oklch(0.95 0.05 350);
+  --generate: oklch(0.7 0.18 150);
+  --generate-foreground: oklch(1 0 0);
+  --page: oklch(0.975 0.005 250);
+  --link: oklch(0.55 0.18 250);
 }
 
 .dark {
