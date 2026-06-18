@@ -55,7 +55,7 @@ type Verbosity = "low" | "medium" | "high";
 type Effort = "low" | "medium" | "high" | "xhigh";
 
 function Index() {
-  const [prompt, setPrompt] = useState("Write a LinkedIn post about …");
+  const [prompt, setPrompt] = useState("Write a post about …");
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
   const [systemMessageEnabled, setSystemMessageEnabled] = useState(false);
