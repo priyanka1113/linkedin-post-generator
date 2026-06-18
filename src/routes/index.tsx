@@ -140,7 +140,7 @@ function Index() {
             />
             <div className="min-w-0">
               <h1 className="truncate text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                LinkedIn Post Generator
+                Puppy Post Generator
               </h1>
               <p className="truncate text-sm text-muted-foreground">
                 Generate high-quality LinkedIn posts from a prompt
