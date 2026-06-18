@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { createClient } from "@supabase/supabase-js";
+
 
 type Body = {
   prompt?: unknown;
