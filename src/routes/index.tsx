@@ -36,12 +36,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "LinkedIn Post Generator" },
+      { title: "Puppy Post Generator" },
       {
         name: "description",
         content: "Generate high-quality LinkedIn posts from a prompt.",
       },
-      { property: "og:title", content: "LinkedIn Post Generator" },
+      { property: "og:title", content: "Puppy Post Generator" },
       {
         property: "og:description",
         content: "Generate high-quality LinkedIn posts from a prompt.",
