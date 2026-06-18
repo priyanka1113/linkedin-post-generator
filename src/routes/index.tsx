@@ -118,6 +118,10 @@ function Index() {
   };
 
   const generate = async () => {
+    if (!session) {
+      navigate({ to: "/auth" });
+      return;
+    }
     if (!prompt.trim()) {
       setError("Prompt is required.");
       return;
@@ -127,7 +131,10 @@ function Index() {
     try {
       const res = await fetch("/api/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           prompt,
           systemMessage: systemMessageEnabled ? systemMessage : undefined,
@@ -148,6 +155,7 @@ function Index() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-page">
