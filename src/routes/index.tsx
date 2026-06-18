@@ -179,21 +179,43 @@ function Index() {
               </p>
             </div>
           </div>
-          <Button
-            variant="brand"
-            size="lg"
-            onClick={generate}
-            disabled={loading}
-            className="shrink-0 rounded-full"
-          >
-            {loading ? (
+          <div className="flex shrink-0 items-center gap-2">
+            {authReady && session ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" /> Generating…
+                <span className="hidden text-xs text-muted-foreground sm:inline">
+                  {session.user.email}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={signOut}
+                  className="rounded-full"
+                >
+                  Sign out
+                </Button>
               </>
-            ) : (
-              "Generate Post"
-            )}
-          </Button>
+            ) : authReady ? (
+              <Button asChild variant="brand" size="lg" className="rounded-full">
+                <Link to="/auth">Sign in</Link>
+              </Button>
+            ) : null}
+            <Button
+              variant="brand"
+              size="lg"
+              onClick={generate}
+              disabled={loading || !session}
+              className="rounded-full"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> Generating…
+                </>
+              ) : (
+                "Generate Post"
+              )}
+            </Button>
+          </div>
+
         </div>
       </header>
 
