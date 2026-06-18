@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { createClient } from "@supabase/supabase-js";
+
 
 type Body = {
   prompt?: unknown;
@@ -36,16 +38,30 @@ export const Route = createFileRoute("/api/generate")({
             return Response.json({ error: GENERIC_ERROR }, { status: 500 });
           }
 
-          // Optional shared-secret gate. If GENERATE_API_SECRET is configured,
-          // require callers to send a matching X-API-Secret header. This blocks
-          // anonymous abuse of the paid OpenAI proxy.
-          const requiredSecret = process.env.GENERATE_API_SECRET;
-          if (requiredSecret) {
-            const provided = request.headers.get("x-api-secret");
-            if (!provided || provided !== requiredSecret) {
-              return Response.json({ error: "Unauthorized" }, { status: 401 });
-            }
+          // Require an authenticated user. Anonymous callers cannot trigger
+          // paid OpenAI requests.
+          const authHeader = request.headers.get("authorization") || "";
+          const token = authHeader.toLowerCase().startsWith("bearer ")
+            ? authHeader.slice(7).trim()
+            : "";
+          if (!token) {
+            return Response.json({ error: "Unauthorized" }, { status: 401 });
           }
+          const supabaseUrl = process.env.SUPABASE_URL;
+          const supabasePublishable = process.env.SUPABASE_PUBLISHABLE_KEY;
+          if (!supabaseUrl || !supabasePublishable) {
+            console.error("[generate] missing Supabase server env vars");
+            return Response.json({ error: GENERIC_ERROR }, { status: 500 });
+          }
+          const authClient = createClient(supabaseUrl, supabasePublishable, {
+            auth: { persistSession: false, autoRefreshToken: false },
+            global: { headers: { Authorization: `Bearer ${token}` } },
+          });
+          const { data: userData, error: userErr } = await authClient.auth.getUser(token);
+          if (userErr || !userData.user) {
+            return Response.json({ error: "Unauthorized" }, { status: 401 });
+          }
+
 
           let body: Body;
           try {

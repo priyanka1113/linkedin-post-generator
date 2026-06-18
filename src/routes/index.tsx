@@ -1,5 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import type { Session } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
+
 import {
   ChevronDown,
   Image as ImageIcon,
@@ -55,7 +58,28 @@ type Verbosity = "low" | "medium" | "high";
 type Effort = "low" | "medium" | "high" | "xhigh";
 
 function Index() {
+  const navigate = useNavigate();
+  const [session, setSession] = useState<Session | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setAuthReady(true);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      setSession(s);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+  };
+
   const [prompt, setPrompt] = useState("Write a post about …");
+
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
   const [systemMessageEnabled, setSystemMessageEnabled] = useState(false);
@@ -94,6 +118,10 @@ function Index() {
   };
 
   const generate = async () => {
+    if (!session) {
+      navigate({ to: "/auth" });
+      return;
+    }
     if (!prompt.trim()) {
       setError("Prompt is required.");
       return;
@@ -103,7 +131,10 @@ function Index() {
     try {
       const res = await fetch("/api/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           prompt,
           systemMessage: systemMessageEnabled ? systemMessage : undefined,
@@ -124,6 +155,7 @@ function Index() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-page">
@@ -147,21 +179,43 @@ function Index() {
               </p>
             </div>
           </div>
-          <Button
-            variant="brand"
-            size="lg"
-            onClick={generate}
-            disabled={loading}
-            className="shrink-0 rounded-full"
-          >
-            {loading ? (
+          <div className="flex shrink-0 items-center gap-2">
+            {authReady && session ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" /> Generating…
+                <span className="hidden text-xs text-muted-foreground sm:inline">
+                  {session.user.email}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={signOut}
+                  className="rounded-full"
+                >
+                  Sign out
+                </Button>
               </>
-            ) : (
-              "Generate Post"
-            )}
-          </Button>
+            ) : authReady ? (
+              <Button asChild variant="brand" size="lg" className="rounded-full">
+                <Link to="/auth">Sign in</Link>
+              </Button>
+            ) : null}
+            <Button
+              variant="brand"
+              size="lg"
+              onClick={generate}
+              disabled={loading || !session}
+              className="rounded-full"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> Generating…
+                </>
+              ) : (
+                "Generate Post"
+              )}
+            </Button>
+          </div>
+
         </div>
       </header>
 
