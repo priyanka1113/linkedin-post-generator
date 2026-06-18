@@ -58,7 +58,28 @@ type Verbosity = "low" | "medium" | "high";
 type Effort = "low" | "medium" | "high" | "xhigh";
 
 function Index() {
+  const navigate = useNavigate();
+  const [session, setSession] = useState<Session | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setAuthReady(true);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      setSession(s);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+  };
+
   const [prompt, setPrompt] = useState("Write a post about …");
+
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
   const [systemMessageEnabled, setSystemMessageEnabled] = useState(false);
