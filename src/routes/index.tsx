@@ -5,7 +5,6 @@ import { supabase } from "@/integrations/supabase/client";
 
 import {
   ChevronDown,
-  FileText,
   Image as ImageIcon,
   Loader2,
   MoreHorizontal,
