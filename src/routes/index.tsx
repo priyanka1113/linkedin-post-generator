@@ -8,15 +8,16 @@ import {
   Image as ImageIcon,
   Loader2,
   MoreHorizontal,
+  PenLine,
   ThumbsUp,
   MessageCircle,
   Share2,
   Upload,
   Link as LinkIcon,
+  User,
   X,
   AlertCircle,
 } from "lucide-react";
-import puppyLogo from "@/assets/puppy.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,12 +40,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Puppy Post Generator" },
+      { title: "LinkedIn Post Generator" },
       {
         name: "description",
         content: "Generate high-quality LinkedIn posts from a prompt.",
       },
-      { property: "og:title", content: "Puppy Post Generator" },
+      { property: "og:title", content: "LinkedIn Post Generator" },
       {
         property: "og:description",
         content: "Generate high-quality LinkedIn posts from a prompt.",
@@ -163,16 +164,12 @@ function Index() {
       <header className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
-            <img
-              src={puppyLogo}
-              alt="Puppy logo"
-              width={48}
-              height={48}
-              className="h-12 w-12 shrink-0 rounded-2xl bg-brand-soft p-1"
-            />
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-soft">
+              <PenLine className="h-6 w-6 text-brand" />
+            </div>
             <div className="min-w-0">
               <h1 className="truncate text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                Puppy Post Generator
+                LinkedIn Post Generator
               </h1>
               <p className="truncate text-sm text-muted-foreground">
                 Generate high-quality LinkedIn posts from a prompt
@@ -413,14 +410,9 @@ function Index() {
           <div className="rounded-xl border border-border bg-background">
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <img
-                  src={puppyLogo}
-                  alt="Avatar"
-                  width={40}
-                  height={40}
-                  loading="lazy"
-                  className="h-10 w-10 rounded-full bg-brand-soft p-0.5"
-                />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-soft">
+                  <User className="h-5 w-5 text-brand" />
+                </div>
                 <div className="leading-tight">
                   <p className="text-sm font-semibold text-foreground">Your Profile</p>
                   <p className="text-xs text-muted-foreground">1h • 🌐</p>
